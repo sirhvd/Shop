@@ -46,7 +46,7 @@ function Cart(){
 ﻿  me.shippingQuantityRate = 0;
 ﻿  me.shippingRate = 0;
 ﻿  me.shippingCost = 0;
-﻿  me.currency = USD;
+﻿  me.currency = VND;
 ﻿  me.checkoutTo = PayPal;
 ﻿  me.email = "";
 ﻿  me.merchantId﻿   = "";
@@ -549,6 +549,8 @@ function Cart(){
 ﻿  ﻿  ﻿  ﻿  return "&euro;";
 ﻿  ﻿  ﻿  case GBP:
 ﻿  ﻿  ﻿  ﻿  return "&pound;";
+﻿  ﻿  ﻿  case VND:
+﻿  ﻿  ﻿  ﻿  return "&VNĐ;";
 ﻿  ﻿  ﻿  case USD:
 ﻿  ﻿  ﻿  case CAD:
 ﻿  ﻿  ﻿  case AUD:
@@ -565,7 +567,11 @@ function Cart(){
 ﻿  me.currencyStringForPaypalCheckout = function( value ){
 ﻿  ﻿  if( me.currencySymbol() == "&#36;" ){
 ﻿  ﻿  ﻿  return "$" + parseFloat( value ).toFixed(2);
-﻿  ﻿  } else {
+﻿  ﻿  } 
+﻿  ﻿  else if ( me.currencySymbol() == "&VNĐ;" ){
+﻿  ﻿  ﻿  return value + " VNĐ";
+﻿  ﻿  }
+﻿  ﻿  else {
 ﻿  ﻿  ﻿  return "" + parseFloat(value ).toFixed(2);
 ﻿  ﻿  }
 ﻿  };
