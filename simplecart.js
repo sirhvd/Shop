@@ -46,7 +46,7 @@ function Cart(){
 ﻿  me.shippingQuantityRate = 0;
 ﻿  me.shippingRate = 0;
 ﻿  me.shippingCost = 0;
-﻿  me.currency = VND;
+﻿  me.currency = EUR;
 ﻿  me.checkoutTo = PayPal;
 ﻿  me.email = "";
 ﻿  me.merchantId﻿   = "";
@@ -550,7 +550,7 @@ function Cart(){
 ﻿  ﻿  ﻿  case GBP:
 ﻿  ﻿  ﻿  ﻿  return "&pound;";
 ﻿  ﻿  ﻿  case VND:
-﻿  ﻿  ﻿  ﻿  return "&VNĐ;";
+﻿  ﻿  ﻿  ﻿  return "&VND;";
 ﻿  ﻿  ﻿  case USD:
 ﻿  ﻿  ﻿  case CAD:
 ﻿  ﻿  ﻿  case AUD:
