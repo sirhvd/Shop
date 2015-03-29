@@ -1,4 +1,4 @@
-﻿/****************************************************************************
+/****************************************************************************
 Copyright (c) 2009 The Wojo Group
 
 thewojogroup.com
@@ -27,7 +27,7 @@ OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN
 THE SOFTWARE.
 ****************************************************************************/
 
-var NextId=1,Custom="Custom",GoogleCheckout="GoogleCheckout",PayPal="PayPal",Email="Email",AustralianDollar=AUD="AUD",CanadianDollar=CAD="CAD",CzechKoruna=CZK="CZK",DanishKrone=DKK="DKK",Euro=EUR="EUR",HongKongDollar=HKD="HKD",HungarianForint=HUF="HUF",IsraeliNewSheqel=ILS="ILS",JapaneseYen=JPY="JPY",MexicanPeso=MXN="MXN",NorwegianKrone=NOK="NOK",NewZealandDollar=NZD="NZD",PolishZloty=PLN="PLN",PoundSterling=GBP="GBP",SingaporeDollar=SGD="SGD",SwedishKrona=SEK="SEK",SwissFranc=CHF="CHF",USDollar=USD="USD";
+var NextId=1,Custom="Custom",GoogleCheckout="GoogleCheckout",PayPal="PayPal",Email="Email",AustralianDollar=AUD="AUD",CanadianDollar=CAD="CAD",CzechKoruna=CZK="CZK",DanishKrone=DKK="DKK",Euro=EUR="EUR",HongKongDollar=HKD="HKD",HungarianForint=HUF="HUF",IsraeliNewSheqel=ILS="ILS",JapaneseYen=JPY="JPY",MexicanPeso=MXN="MXN",NorwegianKrone=NOK="NOK",NewZealandDollar=NZD="NZD",PolishZloty=PLN="PLN",PoundSterling=GBP="GBP",SingaporeDollar=SGD="SGD",SwedishKrona=SEK="SEK",SwissFranc=CHF="CHF",USDollar=USD="USD",VNDollar=VND="VND";
 function Cart(){
 
 ﻿  var me = this;
@@ -46,7 +46,7 @@ function Cart(){
 ﻿  me.shippingQuantityRate = 0;
 ﻿  me.shippingRate = 0;
 ﻿  me.shippingCost = 0;
-﻿  me.currency = EUR;
+﻿  me.currency = VND;
 ﻿  me.checkoutTo = PayPal;
 ﻿  me.email = "";
 ﻿  me.merchantId﻿   = "";
@@ -550,7 +550,7 @@ function Cart(){
 ﻿  ﻿  ﻿  case GBP:
 ﻿  ﻿  ﻿  ﻿  return "&pound;";
 ﻿  ﻿  ﻿  case VND:
-﻿  ﻿  ﻿  ﻿  return "&VND;";
+﻿  ﻿  ﻿  ﻿  return "VND&nbsp;";
 ﻿  ﻿  ﻿  case USD:
 ﻿  ﻿  ﻿  case CAD:
 ﻿  ﻿  ﻿  case AUD:
@@ -565,13 +565,9 @@ function Cart(){
 ﻿  
 ﻿  
 ﻿  me.currencyStringForPaypalCheckout = function( value ){
-﻿  ﻿  if( me.currencySymbol() == "&#36;" ){
-﻿  ﻿  ﻿  return "$" + parseFloat( value ).toFixed(2);
-﻿  ﻿  } 
-﻿  ﻿  else if ( me.currencySymbol() == "&VNĐ;" ){
-﻿  ﻿  ﻿  return value + " VNĐ";
-﻿  ﻿  }
-﻿  ﻿  else {
+﻿  ﻿  if( me.currencySymbol() == "VND&nbsp;" ){
+﻿  ﻿  ﻿  return "$" + parseFloat( value ).toFixed(0);
+﻿  ﻿  } else {
 ﻿  ﻿  ﻿  return "" + parseFloat(value ).toFixed(2);
 ﻿  ﻿  }
 ﻿  };
