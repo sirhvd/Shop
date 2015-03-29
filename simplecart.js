@@ -568,7 +568,7 @@ function Cart(){
 ﻿  ﻿  if( me.currencySymbol() == "VND&nbsp;" ){
 ﻿  ﻿  ﻿  return "$" + parseFloat( value ).toFixed(0);
 ﻿  ﻿  } else {
-﻿  ﻿  ﻿  return "" + parseFloat(value ).toFixed(2);
+﻿  ﻿  ﻿  return "" + parseFloat(value ).toFixed(0);
 ﻿  ﻿  }
 ﻿  };
 ﻿  
