@@ -26,13 +26,13 @@ OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN
 THE SOFTWARE.
 ****************************************************************************/
 
-var Custom="Custom",GoogleCheckout="GoogleCheckout",PayPal="PayPal",Email="Email",IndonesianRupiah="IDR",IDR="IDR",AustralianDollar="AUD",AUD="AUD",CanadianDollar="CAD",CAD="CAD",CzechKoruna="CZK",CZK="CZK",DanishKrone="DKK",DKK="DKK",Euro="EUR",EUR="EUR",HongKongDollar="HKD",HKD="HKD",HungarianForint="HUF",HUF="HUF",IsraeliNewSheqel="ILS",ILS="ILS",JapaneseYen="JPY",JPY="JPY",MexicanPeso="MXN",MXN="MXN",NorwegianKrone="NOK",NOK="NOK",NewZealandDollar="NZD",NZD="NZD",PolishZloty="PLN",PLN="PLN",PoundSterling="GBP",GBP="GBP",SingaporeDollar="SGD",SGD="SGD",SwedishKrona="SEK",SEK="SEK",SwissFranc="CHF",CHF="CHF",ThaiBaht="THB",THB="THB",USDollar="USD",USD="USD",VND="VND";
+var Custom="Custom",GoogleCheckout="GoogleCheckout",PayPal="PayPal",Email="Email",AustralianDollar="AUD",AUD="AUD",CanadianDollar="CAD",CAD="CAD",CzechKoruna="CZK",CZK="CZK",DanishKrone="DKK",DKK="DKK",Euro="EUR",EUR="EUR",HongKongDollar="HKD",HKD="HKD",HungarianForint="HUF",HUF="HUF",IsraeliNewSheqel="ILS",ILS="ILS",JapaneseYen="JPY",JPY="JPY",MexicanPeso="MXN",MXN="MXN",NorwegianKrone="NOK",NOK="NOK",NewZealandDollar="NZD",NZD="NZD",PolishZloty="PLN",PLN="PLN",PoundSterling="GBP",GBP="GBP",SingaporeDollar="SGD",SGD="SGD",SwedishKrona="SEK",SEK="SEK",SwissFranc="CHF",CHF="CHF",ThaiBaht="THB",THB="THB",USDollar="USD",USD="USD",VND="VND";
 function Cart(){
 
 	var me = this;
 	/* member variables */
 	me.nextId = 1;
-	me.Version = '2.2.2';
+	me.Version = '2.2';
 	me.Shelf = null;
 	me.items = {};
 	me.isLoaded = false;
@@ -46,7 +46,7 @@ function Cart(){
 	me.shippingQuantityRate = 0;
 	me.shippingRate = 0;
 	me.shippingCost = 0;
-	me.currency = VND;
+	me.currency = USD;
 	me.checkoutTo = PayPal;
 	me.email = "";
 	me.merchantId	 = "";
@@ -56,9 +56,6 @@ function Cart(){
 	me.storagePrefix = "sc_";
 	me.MAX_COOKIE_SIZE = 4000;
 	me.cartHeaders = ['Name','Price','Quantity','Total'];
-	me.events = {};
-	me.sandbox = false;
-	me.paypalHTTPMethod = "GET";
 	/*
 		cart headers:
 		you can set these to which ever order you would like, and the cart will display the appropriate headers
@@ -118,25 +115,17 @@ function Cart(){
 
 		newItem.parseValuesFromArray( argumentArray );
 		newItem.checkQuantityAndPrice();
-		
-		if( me.trigger('beforeAdd', [newItem] ) === false ){
-			return false;
-		}
-		var isNew = true;
 
 		/* if the item already exists, update the quantity */
 		if( me.hasItem(newItem) ) {
 			var foundItem=me.hasItem(newItem);
 			foundItem.quantity= parseInt(foundItem.quantity,10) + parseInt(newItem.quantity,10);
 			newItem = foundItem;
-			isNew = false;
 		} else {
 			me.items[newItem.id] = newItem;
 		}
 
 		me.update();
-		me.trigger('afterAdd', [newItem,isNew] );
-		
 		return newItem;
 		
 	};
@@ -154,8 +143,8 @@ function Cart(){
 	};
 
 	me.empty = function () {
-		me.items = {};
-		me.update();
+		simpleCart.items = {};
+		simpleCart.update();
 	};
 
 	/******************************************************
@@ -229,94 +218,82 @@ function Cart(){
 	 ******************************************************/
 
 	me.checkout = function() {
-		if( me.quantity === 0 ){
+		if( simpleCart.quantity === 0 ){
 			error("Cart is empty");
-			return false;
+			return;
 		}
-		switch( me.checkoutTo ){
+		switch( simpleCart.checkoutTo ){
 			case PayPal:
-				me.paypalCheckout();
+				simpleCart.paypalCheckout();
 				break;
 			case GoogleCheckout:
-				me.googleCheckout();
+				simpleCart.googleCheckout();
 				break;
 			case Email:
-				me.emailCheckout();
+				simpleCart.emailCheckout();
 				break;
 			default:
-				me.customCheckout();
+				simpleCart.customCheckout();
 				break;
 		}
 	};
 
 	me.paypalCheckout = function() {
 
-		
-		var form = document.createElement("form"),
-			counter=1,
+		var me = this,
+			winpar = "scrollbars,location,resizable,status",
+			strn  = "https://www.paypal.com/cgi-bin/webscr?cmd=_cart" +
+					"&upload=1" +
+					"&business=" + me.email +
+					"&currency_code=" + me.currency,
+			counter = 1,
+			itemsString = "",
 			current,
 			item,
-			descriptionString;
-			
-		form.style.display = "none";
-		form.method = me.paypalHTTPMethod =="GET" || me.paypalHTTPMethod == "POST" ? me.paypalHTTPMethod : "GET";
-		form.action = me.sandbox ? "https://www.sandbox.paypal.com/cgi-bin/webscr" : "https://www.paypal.com/cgi-bin/webscr";
-		form.acceptCharset = "utf-8";
-			
-			
-		// setup hidden fields
-		form.appendChild(me.createHiddenElement("cmd", "_cart"));
-		form.appendChild(me.createHiddenElement("rm", me.paypalHTTPMethod == "POST" ? "2" : "0" ));
-		form.appendChild(me.createHiddenElement("upload", "1"));
-		form.appendChild(me.createHiddenElement("business", me.email ));
-		form.appendChild(me.createHiddenElement("currency_code", "me.currency"));
-		
+			optionsString,
+			field;
+
+
 		if( me.taxRate ){
-			form.appendChild(me.createHiddenElement("tax_cart",me.taxCost ));
+			strn = strn +
+				"&tax_cart=" +	me.currencyStringForPaypalCheckout( me.taxCost );
 		}
-		
+
+		me.each(function(item,iter){
+			
+			counter = iter+1;
+			optionsString = "";
+			
+			me.each( item , function( value, x , field ){
+				if( field !== "id" && field !== "price" && field !== "quantity" && field !== "name" && field !== "shipping") {
+					optionsString = optionsString + ", " + field + "=" + value ;
+				}
+			});
+			optionsString = optionsString.substring(2);
+
+			itemsString = itemsString	+ "&item_name_"		+ counter + "=" + item.name	 +
+										  "&item_number_"	+ counter + "=" + counter +
+										  "&quantity_"		+ counter + "=" + item.quantity +
+										  "&amount_"		+ counter + "=" + me.currencyStringForPaypalCheckout( item.price ) +
+										  "&on0_"			+ counter + "=" + "Options" +
+										  "&os0_"			+ counter + "=" + optionsString;
+		});
+
 		if( me.shipping() !== 0){
-			form.appendChild(me.createHiddenElement("handling_cart",  me.shippingCost ));
+			 itemsString = itemsString	+	"&shipping=" + me.currencyStringForPaypalCheckout( me.shippingCost );
 		}
 		
 		if( me.successUrl ){
-			form.appendChild(me.createHiddenElement("return",  me.successUrl ));
+			itemsString = itemsString + "&return=" + me.successUrl;
 		}
 		
 		if( me.cancelUrl ){
-			form.appendChild(me.createHiddenElement("cancel_return",  me.cancelUrl ));
+			itemsString = itemsString + "&cancel_return=" + me.cancelUrl;
 		}
-		
-		
-
-		me.each(function(item,iter){
-
-			counter = iter+1;
-		
-			form.appendChild( me.createHiddenElement( "item_name_"		+ counter, item.name		) );
-			form.appendChild( me.createHiddenElement( "quantity_"		+ counter, item.quantity	) );
-			form.appendChild( me.createHiddenElement( "amount_"			+ counter, item.price		) );
-			form.appendChild( me.createHiddenElement( "item_number_"	+ counter, counter			) );
-			
-			var option_count = 0;
-
-			me.each( item , function( value, x , field ){
-				if( field !== "id" && field !== "price" && field !== "quantity" && field !== "name" && field !== "shipping" && option_count < 10) {
-					form.appendChild( me.createHiddenElement( "on" + option_count + "_"	+ counter, 	field ) );
-					form.appendChild( me.createHiddenElement( "os" + option_count + "_"	+ counter, 	value ) );
-					option_count++;
-				}
-			});
-
-			form.appendChild( me.createHiddenElement( "option_index_" + counter, option_count) );
-
-		});
 
 
-		document.body.appendChild( form );
-		form.submit();
-		document.body.removeChild( form );
-		
+		strn = strn + itemsString ;
+		window.open (strn, "paypal", winpar);
 	};
 
 	me.googleCheckout = function() {
@@ -374,7 +351,7 @@ function Cart(){
 		// hack for adding shipping
 		if( me.shipping() !== 0){
 		   form.appendChild(me.createHiddenElement("ship_method_name_1", "Shipping"));
-		   form.appendChild(me.createHiddenElement("ship_method_price_1", parseFloat(me.shippingCost).toFixed(0)));
+		   form.appendChild(me.createHiddenElement("ship_method_price_1", parseFloat(me.shippingCost).toFixed(2)));
 		   form.appendChild(me.createHiddenElement("ship_method_currency_1", me.currency));
 		}
 
@@ -390,6 +367,40 @@ function Cart(){
 	};
 
 	me.customCheckout = function() {
+				var me = this,
+			winpar = "scrollbars,location,resizable,status",
+			strn  = "https://www.nganluong.vn/button_payment.php?receiver=" + me.email,
+			counter = 1,
+			itemsName = "",
+			itemsComment = "&comments=Thanh%20to%C3%A1n%20%C4%91%E1%BA%B7t%20h%C3%A0ng%20tr%E1%BB%B1c%20tuy%E1%BA%BFn",
+			itemsPrice = 0,
+			current,
+			item,
+			optionsString,
+			field;
+
+		me.each(function(item,iter){
+			if (itemsName == "") {
+				itemsName = "&product_name=" + item.name;
+			}
+			else {
+				itemsName = itemsName + ", " + item.name;
+			}
+			itemsPrice = itemsPrice + item.price*item.quantity;
+			if (item.quantity > 1) {
+					itemsName = itemsName + " x " + item.quantity;
+				}
+			
+		});
+		
+		
+		itemsPrice = "&price=" + itemsPrice;
+		if( me.successUrl ){
+			itemsName = itemsName + "&return_url=" + me.successUrl;
+		}
+
+		strn = strn + encodeURI(itemsName) + itemsPrice  + itemsComment;
+		window.open (strn, "Ngan Luong", winpar);
 		return;
 	};
 
@@ -407,7 +418,7 @@ function Cart(){
 			
 		/* initialize variables and items array */
 		me.items = {};
-		me.total = 0.000;
+		me.total = 0.00;
 		me.quantity = 0;
 
 		/* retrieve item data from cookie */
@@ -621,11 +632,7 @@ function Cart(){
 				outputValue = me.valueToCurrencyString( item[ info[0].toLowerCase() ] ? item[info[0].toLowerCase()] : " " );
 				break;
 			default: 
-				outputValue = item[ info[0].toLowerCase() ] ? 
-							typeof 	item[info[0].toLowerCase()] === 'function' ?
-							 		item[info[0].toLowerCase()].call(item) :
-									item[info[0].toLowerCase()] :
-									" ";
+				outputValue = item[ info[0].toLowerCase() ] ? item[info[0].toLowerCase()] : " ";
 				break;
 		}	
 		
@@ -683,56 +690,6 @@ function Cart(){
 	};
 
 
-	/******************************************************
-			Event Management
-	 ******************************************************/
-	
-	// bind a callback to a simpleCart event
-	me.bind = function( name , callback ){
-		if( typeof callback !== 'function' ){
-			return me;
-		}
-		
-		
-		if (me.events[name] === true ){
-			callback.apply( me );
-		} else if( typeof me.events[name] !== 'undefined' ){
-			me.events[name].push( callback );
-		} else {
-			me.events[name] = [ callback ];
-		}
-		return me;
-	};
-	
-	
-	// trigger event
-	me.trigger = function( name , options ){
-		var returnval = true;
-		if( typeof me.events[name] !== 'undefined' && typeof me.events[name][0] === 'function'){
-			for( var x=0,xlen=me.events[name].length; x<xlen; x++ ){
-				returnval = me.events[name][x].apply( me , (options ? options : [] ) );
-			}
-		}
-		if( returnval === false ){
-			return false;
-		} else {
-			return true;
-		}
-	};
-	
-	// shortcut for ready function
-	me.ready = function( callback ){
-		if( !callback ){
-			me.trigger( 'ready' );
-			me.events['ready'] = true;
-		} else {
-			me.bind( 'ready' , callback );
-		}
-		return me;
-	};
-
-
-
 
 	/******************************************************
 				Currency management
@@ -740,8 +697,6 @@ function Cart(){
 
 	me.currencySymbol = function() {
 		switch(me.currency){
-			case IDR:
-				return "Rp&nbsp;";
 			case CHF:
 				return "CHF&nbsp;";
 			case CZK:
@@ -766,9 +721,9 @@ function Cart(){
 				return "CHF&nbsp;";
 			case THB: 
 				return "&#3647;";
-			case VND: 
-				return "VND&nbsp;";
 			case USD:
+			case VND:
+				return "VNĐ&nbsp;";
 			case CAD:
 			case AUD:
 			case NZD:
@@ -782,10 +737,10 @@ function Cart(){
 
 
 	me.currencyStringForPaypalCheckout = function( value ){
-		if( me.currencySymbol() == "VND&nbsp;" ){
-			return "$" + parseFloat( value ).toFixed(0);
+		if( me.currencySymbol() == "&#36;" ){
+			return "$" + parseFloat( value ).toFixed(2);
 		} else {
-			return "" + parseFloat(value ).toFixed(0);
+			return "" + parseFloat(value ).toFixed(2);
 		}
 	};
 
@@ -940,10 +895,9 @@ function Cart(){
 	}
 
 	me.initialize = function() {
-		me.initializeView();
-		me.load();
-		me.update();
-		me.ready();
+		simpleCart.initializeView();
+		simpleCart.load();
+		simpleCart.update();
 	};
 
 }
@@ -958,19 +912,14 @@ function CartItem() {
 		
 	this.id = "c" + simpleCart.nextId;
 }
-
-
-CartItem.prototype = {
-	
-	set : function ( field , value ){
+	CartItem.prototype.set = function ( field , value ){
 		field = field.toLowerCase();
 		if( typeof( this[field] ) !== "function" && field !== "id" ){
-			value = "" + value;
-			if( field == "quantity"){
+			if( field == "quantity" ){
 				value = value.replace( /[^(\d|\.)]*/gi , "" );
 				value = value.replace(/,*/gi, "");
 				value = parseInt(value,10);
-			} else if( field == "price" ){
+			} else if( field == "price"){
 				value = value.replace( /[^(\d|\.)]*/gi, "");
 				value = value.replace(/,*/gi , "");
 				value = parseFloat( value );
@@ -978,12 +927,10 @@ CartItem.prototype = {
 			if( typeof(value) == "number" && isNaN( value ) ){
 				error( "Improperly formatted input.");
 			} else {
-				if( typeof( value ) === "string" ){
-					if( value.match(/\~|\=/) ){
-						error("Special character ~ or = not allowed: " + value);
-					}
-					value = value.replace(/\~|\=/g, "");
+				if( value.match(/\~|\=/) ){
+					error("Special character ~ or = not allowed: " + value);
 				}
+				value = value.replace(/\~|\=/g, "");
 				this[field] = value;
 				this.checkQuantityAndPrice();
 			}
@@ -991,33 +938,33 @@ CartItem.prototype = {
 			error( "Cannot change " + field + ", this is a reserved field.");
 		}
 		simpleCart.update();
-	},
+	};
 
-	increment : function(){
+	CartItem.prototype.increment = function(){
 		this.quantity = parseInt(this.quantity,10) + 1;
 		simpleCart.update();
-	},
+	};
 
-	decrement : function(){
+	CartItem.prototype.decrement = function(){
 		if( parseInt(this.quantity,10) < 2 ){
 			this.remove();
 		} else {
 			this.quantity = parseInt(this.quantity,10) - 1;
 			simpleCart.update();
 		}
-	},
+	};
 
-	print : function () {
+	CartItem.prototype.print = function () {
 		var returnString = '',
 			field;
 		simpleCart.each(this ,function(item,x,name){ 	
 			returnString+= escape(name) + "=" + escape(item) + "||";
 		});
 		return returnString.substring(0,returnString.length-2);
-	},
+	};
 
 
-	checkQuantityAndPrice : function() {
+	CartItem.prototype.checkQuantityAndPrice = function() {
 
 		if( !this.quantity || this.quantity == null || this.quantity == 'undefined'){ 
 			this.quantity = 1;
@@ -1032,20 +979,20 @@ CartItem.prototype = {
 		}
 
 		if( !this.price || this.price == null || this.price == 'undefined'){
-			this.price=0;
+			this.price=0.00;
 			error('No price for item or price not properly formatted.');
 		} else {
 			this.price = ("" + this.price).replace(/,*/gi, "" );
 			this.price = parseFloat( ("" + this.price).replace( /[^(\d|\.)]*/gi, "") );
 			if( isNaN(this.price) ){
 				error('Price is not a number.');
-				this.price = 0;
+				this.price = 0.00;
 			}
 		}
-	},
+	};
 
 
-	parseValuesFromArray : function( array ) {
+	CartItem.prototype.parseValuesFromArray = function( array ) {
 		if( array && array.length && array.length > 0) {
 			for(var x=0, xlen=array.length; x<xlen;x++ ){
 
@@ -1073,13 +1020,12 @@ CartItem.prototype = {
 		} else {
 			return false;
 		}
-	},
+	};
 
-	remove : function() {
+	CartItem.prototype.remove = function() {
 		simpleCart.remove(this.id);
 		simpleCart.update();
-	}
-};
+	};
 
 
 
@@ -1090,9 +1036,7 @@ CartItem.prototype = {
 function Shelf(){
 	this.items = {};
 }
-Shelf.prototype = { 
-		
-	readPage : function () {
+	Shelf.prototype.readPage = function () {
 		this.items = {};
 		var newItems = getElementsByClassName( "simpleCart_shelfItem" ),
 			newItem;
@@ -1103,9 +1047,9 @@ Shelf.prototype = {
 			me.checkChildren( newItems[x] , newItem );
 			me.items[newItem.id] = newItem;
 		}
-	},
+	};
 
-	checkChildren : function ( item , newItem) {
+	Shelf.prototype.checkChildren = function ( item , newItem) {
 		if( !item.childNodes )
 			return;
 		for(var x=0;item.childNodes[x];x++){
@@ -1129,14 +1073,14 @@ Shelf.prototype = {
 				this.checkChildren( node , newItem );
 			}
 		}
-	},
+	};
 
-	empty : function () {
+	Shelf.prototype.empty = function () {
 		this.items = {};
-	},
+	};
 
 
-	addToCart : function ( id ) {
+	Shelf.prototype.addToCart = function ( id ) {
 		return function(){
 			if( simpleCart.Shelf.items[id]){
 				simpleCart.Shelf.items[id].addToCart();
@@ -1144,8 +1088,7 @@ Shelf.prototype = {
 				error( "Shelf item with id of " + id + " does not exist.");
 			}
 		};
-	}
-};
+	};
 
 
 /********************************************************************************************************
@@ -1156,14 +1099,12 @@ Shelf.prototype = {
 function ShelfItem(){
 	this.id = "s" + simpleCart.nextId++;
 }
-
-ShelfItem.prototype = {
-	
-	remove : function () {
+	ShelfItem.prototype.remove = function () {
 		simpleCart.Shelf.items[this.id] = null;
-	},
+	};
 
-	addToCart : function () {
+
+	ShelfItem.prototype.addToCart = function () {
 		var outStrings = [],
 			valueString,
 			field;
@@ -1203,8 +1144,7 @@ ShelfItem.prototype = {
 		}
 
 		simpleCart.add( outStrings );
-	}
-};
+	};
 
 
 
@@ -1328,7 +1268,7 @@ var getElementsByClassName = function (className, tag, elm){
 
 
 String.prototype.reverse=function(){return this.split("").reverse().join("");};
-Number.prototype.withCommas=function(){var x=6,y=parseFloat(this).toFixed(0).toString().reverse();while(x<y.length){y=y.substring(0,x)+","+y.substring(x);x+=4;}return y.reverse();};
+Number.prototype.withCommas=function(){var x=6,y=parseFloat(this).toFixed(2).toString().reverse();while(x<y.length){y=y.substring(0,x)+","+y.substring(x);x+=4;}return y.reverse();};
 Number.prototype.toCurrency=function(){return(arguments[0]?arguments[0]:"$")+this.withCommas();};
 
 
