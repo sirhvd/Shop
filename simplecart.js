@@ -578,7 +578,7 @@ function Cart(){
 ﻿  
 ﻿  
 ﻿  me.valueToCurrencyString = function( value ) {
-﻿  ﻿  return parseFloat( value ).toCurrency( me.currencySymbol() );
+﻿  ﻿  return parseInt(value,100).toCurrency( me.currencySymbol() );
 ﻿  };
 ﻿  
 ﻿  me.valueToPercentageString = function( value ){
