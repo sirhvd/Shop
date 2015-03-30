@@ -550,7 +550,7 @@ function Cart(){
 ﻿  ﻿  ﻿  case GBP:
 ﻿  ﻿  ﻿  ﻿  return "&pound;";
 ﻿  ﻿  ﻿  case VDN:		
-﻿  ﻿  ﻿  ﻿  return "";
+﻿  ﻿  ﻿  ﻿  return "&vnd;";
 ﻿  ﻿  ﻿  case USD:
 ﻿  ﻿  ﻿  case CAD:
 ﻿  ﻿  ﻿  case AUD:
@@ -568,7 +568,7 @@ function Cart(){
 ﻿  ﻿  if( me.currencySymbol() == "&#36;" ){
 ﻿  ﻿  ﻿  return "$" + parseFloat( value ).toFixed(2);
 ﻿  ﻿  } else {
-﻿  ﻿  ﻿  return "" + parseInt(value,10) + " VND";
+﻿  ﻿  ﻿  return "" + parseInt(value,100) + " VND";
 ﻿  ﻿  }
 ﻿  };
 ﻿  
