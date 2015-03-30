@@ -27,7 +27,7 @@ OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN
 THE SOFTWARE.
 ****************************************************************************/
 
-var NextId=1,Custom="Custom",GoogleCheckout="GoogleCheckout",PayPal="PayPal",Email="Email",AustralianDollar=AUD="AUD",CanadianDollar=CAD="CAD",CzechKoruna=CZK="CZK",DanishKrone=DKK="DKK",Euro=EUR="EUR",HongKongDollar=HKD="HKD",HungarianForint=HUF="HUF",IsraeliNewSheqel=ILS="ILS",JapaneseYen=JPY="JPY",MexicanPeso=MXN="MXN",NorwegianKrone=NOK="NOK",NewZealandDollar=NZD="NZD",PolishZloty=PLN="PLN",PoundSterling=GBP="GBP",SingaporeDollar=SGD="SGD",SwedishKrona=SEK="SEK",SwissFranc=CHF="CHF",USDollar=USD="USD", VNDollar=VND="VND";
+var NextId=1,Custom="Custom",GoogleCheckout="GoogleCheckout",PayPal="PayPal",Email="Email",AustralianDollar=AUD="AUD",CanadianDollar=CAD="CAD",CzechKoruna=CZK="CZK",DanishKrone=DKK="DKK",Euro=EUR="EUR",HongKongDollar=HKD="HKD",HungarianForint=HUF="HUF",IsraeliNewSheqel=ILS="ILS",JapaneseYen=JPY="JPY",MexicanPeso=MXN="MXN",NorwegianKrone=NOK="NOK",NewZealandDollar=NZD="NZD",PolishZloty=PLN="PLN",PoundSterling=GBP="GBP",SingaporeDollar=SGD="SGD",SwedishKrona=SEK="SEK",SwissFranc=CHF="CHF",USDollar=USD="USD";
 function Cart(){
 
 ﻿  var me = this;
@@ -46,7 +46,7 @@ function Cart(){
 ﻿  me.shippingQuantityRate = 0;
 ﻿  me.shippingRate = 0;
 ﻿  me.shippingCost = 0;
-﻿  me.currency = VND;
+﻿  me.currency = IDR;
 ﻿  me.checkoutTo = PayPal;
 ﻿  me.email = "";
 ﻿  me.merchantId﻿   = "";
@@ -549,8 +549,6 @@ function Cart(){
 ﻿  ﻿  ﻿  ﻿  return "&euro;";
 ﻿  ﻿  ﻿  case GBP:
 ﻿  ﻿  ﻿  ﻿  return "&pound;";
-﻿  ﻿  ﻿  case VDN:		
-﻿  ﻿  ﻿  ﻿  return "&vnd;";
 ﻿  ﻿  ﻿  case USD:
 ﻿  ﻿  ﻿  case CAD:
 ﻿  ﻿  ﻿  case AUD:
@@ -568,7 +566,7 @@ function Cart(){
 ﻿  ﻿  if( me.currencySymbol() == "&#36;" ){
 ﻿  ﻿  ﻿  return "$" + parseFloat( value ).toFixed(2);
 ﻿  ﻿  } else {
-﻿  ﻿  ﻿  return "" + parseInt(value,100) + " VND";
+﻿  ﻿  ﻿  return "" + parseFloat(value ).toFixed(2);
 ﻿  ﻿  }
 ﻿  };
 ﻿  
@@ -578,7 +576,7 @@ function Cart(){
 ﻿  
 ﻿  
 ﻿  me.valueToCurrencyString = function( value ) {
-﻿  ﻿  return parseInt(value,100).toCurrency( me.currencySymbol() );
+﻿  ﻿  return parseFloat( value ).toCurrency( me.currencySymbol() );
 ﻿  };
 ﻿  
 ﻿  me.valueToPercentageString = function( value ){
@@ -1066,7 +1064,7 @@ var getElementsByClassName = function (className, tag, elm){
 
 String.prototype.reverse=function(){return this.split("").reverse().join("");};
 Number.prototype.withCommas=function(){var x=6,y=parseFloat(this).toFixed(2).toString().reverse();while(x<y.length){y=y.substring(0,x)+","+y.substring(x);x+=4;}return y.reverse();};
-Number.prototype.toCurrency=function(){return(arguments[0]?arguments[0]:"$")+this.withCommas();};
+Number.prototype.toCurrency=function(){return this.withCommas()+(" ")+(arguments[0]?arguments[0]:";VNĐ");};
 
 
 /********************************************************************************************************
