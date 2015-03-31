@@ -300,18 +300,19 @@ me.customCheckout = function()
 
 	for( var current in me.items )
 	{
+		var price = 0;
 		var item = me.items[current];
+		totalprice = totalprice + item.price*item.quantity;
 		itemsString = itemsString 	+ "SP" + counter + " :" + item.name ;
 		itemsString = itemsString 	+ "\nSố lượng: " + item.quantity;
-		itemsString = itemsString 	+ "\nGiá: " + item.price + "\n";
+		itemsString = itemsString 	+ "\nĐơn giá: " + item.price + "\n";
+		itemsString = itemsString 	+ "\nTổng tiền: " + totalprice + "\n";
 		itemsString = itemsString 	+ "--------------------------------\n";
-		totalprice = totalprice + item.price*item.quantity;				
 		counter++;
 	}
-	itemsString = itemsString + "\n\nTổng cộng: " + totalprice;
+	itemsString = itemsString + "\n\nTổng tiền cần thanh toán: " + totalprice;
 	
 	strn = strn + encodeURI(itemsString);
-	document.write(strn);
 	window.open (strn, "Phiếu đặt hàng", winpar);
 	return;
 };
