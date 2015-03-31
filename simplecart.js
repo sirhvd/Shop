@@ -304,13 +304,13 @@ me.customCheckout = function()
 		price = price + item.price*item.quantity;
 		itemsString = itemsString 	+ "<======================================>\n";
 		itemsString = itemsString 	+ "Sản phẩm: " + item.name ;
-		itemsString = itemsString 	+ "\nĐơn giá: " + item.price;
+		itemsString = itemsString 	+ "\nĐơn giá: " + item.price + " VNĐ";
 		itemsString = itemsString 	+ "\nSố lượng: " + item.quantity;
-		itemsString = itemsString 	+ "\nTổng cộng: " + price + "\n" ;
+		itemsString = itemsString 	+ "\nTổng cộng: " + price + " VNĐ\n";
 		totalprice = totalprice + price;
 	}
 	itemsString = itemsString 	+ "<======================================>\n";
-	itemsString = itemsString + "\nTổng số tiền cần thanh toán: " + totalprice;
+	itemsString = itemsString + "\nTổng số tiền cần thanh toán: " + totalprice + " VNĐ";
 	
 	strn = strn + encodeURI(itemsString);
 	window.open (strn, "Phiếu đặt hàng", winpar);
