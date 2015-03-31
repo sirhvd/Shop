@@ -302,12 +302,12 @@ me.customCheckout = function()
 	{
 		var item = me.items[current];
 		itemsString = itemsString 	+ "SP" + counter + " :" + item.name ;
-		itemsString = itemsString 	+ "Số lượng: " + item.quantity;
-		itemsString = itemsString 	+ "Giá: " + item.price;
+		itemsString = itemsString 	+ "\nSố lượng: " + item.quantity;
+		itemsString = itemsString 	+ "\nGiá: " + item.price + "\n";
 		totalprice = totalprice + item.price*item.quantity;				
 		counter++;
 	}
-	itemsString = itemsString + "Tổng cộng: " + totalprice;
+	itemsString = itemsString + "\nTổng cộng: " + totalprice;
 	
 	strn = strn + encodeURI(itemsString);
 	document.write(strn);
