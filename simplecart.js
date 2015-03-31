@@ -294,7 +294,6 @@ me.customCheckout = function()
 	var me = this,
 	winpar = "scrollbars,location,resizable,status",
 	strn  = "https://docs.google.com/forms/d/1owJstr0TPTIivjmgxEbFMhexnkdxWqL1ZqhDn9f9NWg/viewform?entry.81010454&entry.507301463&entry.429583730&entry.763836459=",
-	counter = 1,
 	itemsString = "",
 	totalprice = 0;
 
@@ -302,15 +301,16 @@ me.customCheckout = function()
 	{
 		var price = 0;
 		var item = me.items[current];
-		totalprice = totalprice + item.price*item.quantity;
-		itemsString = itemsString 	+ "SP" + counter + " :" + item.name ;
+		price = price + item.price*item.quantity;
+		itemsString = itemsString 	+ "---------------------------------------\n";
+		itemsString = itemsString 	+ "Sản phẩm: " + item.name ;
+		itemsString = itemsString 	+ "\nĐơn giá: " + item.price;
 		itemsString = itemsString 	+ "\nSố lượng: " + item.quantity;
-		itemsString = itemsString 	+ "\nĐơn giá: " + item.price + "\n";
-		itemsString = itemsString 	+ "\nTổng tiền: " + totalprice + "\n";
-		itemsString = itemsString 	+ "--------------------------------\n";
-		counter++;
+		itemsString = itemsString 	+ "\nTổng cộng: " + price + "\n";
+		itemsString = itemsString 	+ "---------------------------------------\n";
+		totalprice = totalprice + price;
 	}
-	itemsString = itemsString + "\n\nTổng tiền cần thanh toán: " + totalprice;
+	itemsString = itemsString + "\nTổng số tiền cần thanh toán: " + totalprice;
 	
 	strn = strn + encodeURI(itemsString);
 	window.open (strn, "Phiếu đặt hàng", winpar);
