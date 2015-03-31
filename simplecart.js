@@ -304,10 +304,11 @@ me.customCheckout = function()
 		itemsString = itemsString 	+ "SP" + counter + " :" + item.name ;
 		itemsString = itemsString 	+ "\nSố lượng: " + item.quantity;
 		itemsString = itemsString 	+ "\nGiá: " + item.price + "\n";
+		itemsString = itemsString 	+ "--------------------------------\n";
 		totalprice = totalprice + item.price*item.quantity;				
 		counter++;
 	}
-	itemsString = itemsString + "\nTổng cộng: " + totalprice;
+	itemsString = itemsString + "\n\nTổng cộng: " + totalprice;
 	
 	strn = strn + encodeURI(itemsString);
 	document.write(strn);
