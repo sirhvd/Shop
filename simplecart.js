@@ -300,12 +300,15 @@ me.customCheckout = function()
 	for( var current in me.items )
 	{
 		var item = me.items[current];
-		itemsString = itemsString 	+ "SP" + counter + " :" + item.name + + "\nSL: " + item.quantity + + "\nGiá: " + item.price + "\n";
+		itemsString = itemsString 	+ "SP" + counter + " :" + item.name +
+									+ "%0ASL: " + item.quantity +
+									+ "%0AGiá: " + item.price + "%0A%0A";
 		counter++;
 	}
 	itemsString = itemsString 	+ "Tổng cộng: " + item.total;
 	
 	strn = strn + encodeURI(itemsString);
+	document.write(strn);
 	window.open (strn, "Phiếu đặt hàng", winpar);
 	return;
 };
