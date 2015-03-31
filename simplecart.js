@@ -295,17 +295,19 @@ me.customCheckout = function()
 	winpar = "scrollbars,location,resizable,status",
 	strn  = "https://docs.google.com/forms/d/1owJstr0TPTIivjmgxEbFMhexnkdxWqL1ZqhDn9f9NWg/viewform?entry.81010454&entry.507301463&entry.429583730&entry.763836459=",
 	counter = 1,
-	itemsString = "";
+	itemsString = "",
+	totalprice = 0;
 
 	for( var current in me.items )
 	{
 		var item = me.items[current];
 		itemsString = itemsString 	+ "SP" + counter + " :" + item.name +
-						+ "SL: " + item.quantity +
+						+ "Số lượng: " + item.quantity +
 						+ "Giá: " + item.price;
+		totalprice = totalprice + item.price*item.quantity;				
 		counter++;
 	}
-	itemsString = itemsString 	+ "Tổng cộng: " + item.total;
+	itemsString = itemsString + "Tổng cộng: " + totalprice;
 	
 	strn = strn + encodeURI(itemsString);
 	document.write(strn);
