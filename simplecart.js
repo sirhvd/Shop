@@ -301,9 +301,9 @@ me.customCheckout = function()
 	for( var current in me.items )
 	{
 		var item = me.items[current];
-		itemsString = itemsString 	+ "SP" + counter + " :" + item.name +
-						+ "Số lượng: " + item.quantity +
-						+ "Giá: " + item.price;
+		itemsString = itemsString 	+ "SP" + counter + " :" + item.name ;
+		itemsString = itemsString 	+ "Số lượng: " + item.quantity;
+		itemsString = itemsString 	+ "Giá: " + item.price;
 		totalprice = totalprice + item.price*item.quantity;				
 		counter++;
 	}
