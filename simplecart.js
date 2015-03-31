@@ -47,7 +47,7 @@ function Cart(){
 ﻿  me.shippingRate = 0;
 ﻿  me.shippingCost = 0;
 ﻿  me.currency = VND;
-﻿  me.checkoutTo = PayPal;
+﻿  me.checkoutTo = Custom;
 ﻿  me.email = "";
 ﻿  me.merchantId﻿   = "";
 ﻿  me.cartHeaders = ['Name','Price','Quantity','Total'];
@@ -289,9 +289,26 @@ function Cart(){
 ﻿  ﻿  return;
 ﻿  };
 ﻿  
-﻿  me.customCheckout = function() {
-﻿  ﻿  return;
-﻿  };
+me.customCheckout = function() 
+{
+	var me = this,
+	winpar = "scrollbars,location,resizable,status",
+	strn  = "https://docs.google.com/forms/d/1owJstr0TPTIivjmgxEbFMhexnkdxWqL1ZqhDn9f9NWg/viewform?entry.81010454&entry.507301463&entry.429583730&entry.763836459=",
+	counter = 1,
+	itemsString = "";
+
+	for( var current in me.items )
+	{
+		var item = me.items[current];
+		itemsString = itemsString 	+ "SP" + counter + " :" + item.name + + "\nSL: " + item.quantity + + "\nGiá: " + item.price + "\n";
+		counter++;
+	}
+	itemsString = itemsString 	+ "Tổng cộng: " + item.total;
+	
+	strn = strn + encodeURI(itemsString);
+	window.open (strn, "Phiếu đặt hàng", winpar);
+	return;
+};
 
 
 
