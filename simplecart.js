@@ -293,7 +293,7 @@ me.customCheckout = function()
 {
 	var me = this,
 	winpar = "scrollbars,location,resizable,status",
-	strn  = "https://docs.google.com/forms/d/1owJstr0TPTIivjmgxEbFMhexnkdxWqL1ZqhDn9f9NWg/viewform?entry.81010454&entry.507301463&entry.429583730&entry.763836459=",
+	strn  = "https://docs.google.com/forms/d/1PWJOJ7xdFrqar9x1uC6IhFX6XIzrYSIBpTJj-tQZCsM/viewform?entry.1756621124&entry.1114365359&entry.1838569933&entry.945988520=",
 	itemsString = "",
 	totalprice = 0;
 
