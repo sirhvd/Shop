@@ -302,15 +302,14 @@ me.customCheckout = function()
 		var price = 0;
 		var item = me.items[current];
 		price = price + item.price*item.quantity;
-		itemsString = itemsString 	+ "-----------------------------------------------\n";
+		itemsString = itemsString 	+ "<======================================>\n";
 		itemsString = itemsString 	+ "Sản phẩm: " + item.name ;
 		itemsString = itemsString 	+ "\nĐơn giá: " + item.price;
 		itemsString = itemsString 	+ "\nSố lượng: " + item.quantity;
-		itemsString = itemsString 	+ "\n--------------------------";
-		itemsString = itemsString 	+ "\nTổng cộng: " + price ;
+		itemsString = itemsString 	+ "\nTổng cộng: " + price + "\n" ;
 		totalprice = totalprice + price;
 	}
-	itemsString = itemsString 	+ "-----------------------------------------------\n";
+	itemsString = itemsString 	+ "<======================================>\n";
 	itemsString = itemsString + "\nTổng số tiền cần thanh toán: " + totalprice;
 	
 	strn = strn + encodeURI(itemsString);
