@@ -301,8 +301,8 @@ me.customCheckout = function()
 	{
 		var item = me.items[current];
 		itemsString = itemsString 	+ "SP" + counter + " :" + item.name +
-									+ "%0ASL: " + item.quantity +
-									+ "%0AGiá: " + item.price + "%0A%0A";
+						+ "SL: " + item.quantity +
+						+ "Giá: " + item.price;
 		counter++;
 	}
 	itemsString = itemsString 	+ "Tổng cộng: " + item.total;
